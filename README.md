@@ -1,67 +1,80 @@
 # 🧠 Reddit User Persona Generator
 
-A lightweight Python-based project that analyzes a Reddit user's public activity to generate a **concise third-person persona profile**. The goal is to distill personality traits, interests, profession, and behavior patterns from a user’s posts and comments using a combination of **Natural Language Processing (NLP)** and **Large Language Model (LLM)** summarization.
+This project generates **realistic and structured user personas** based on a Reddit user’s public activity (comments + posts). It uses **LLM-based summarization** and NLP rule-based heuristics to extract personality, behavior, interests, profession, and more.
+
+Ideal for:
+- UX research
+- Marketing personas
+- LLM fine-tuning or prompt seeding
+- Behavioral profiling (educational/experimental use)
 
 ---
 
-## 🔍 What It Does
+## 🚀 Features
 
-Given a Reddit username or profile URL (e.g., `https://www.reddit.com/user/spez/`), the tool:
-
-1. Fetches the user's most recent Reddit comments and posts.
-2. Chunks and summarizes the combined text using a HuggingFace summarization model.
-3. Extracts structured traits (interests, profession, location, etc.) using pattern-based NLP.
-4. Outputs a structured persona in a clean, professional format (ideal for UX, marketing, or behavioral studies).
+✅ Scrapes up to 100 comments & 50 posts from a given Reddit username  
+✅ Summarizes user content using Hugging Face’s `bart-large-cnn-samsum` model  
+✅ Extracts traits like interests, personality, behavior, profession, location  
+✅ Generates professional third-person user persona in text format  
+✅ Outputs formatted text resembling real marketing/user profiles  
+✅ Handles token size issues with safe chunking  
+✅ Fully modular & extendable design
 
 ---
 
-## 🧱 Project Architecture
-
-reddit_user_persona/
-├── main.py # CLI Entry Point
-├── reddit_scraper.py # Fetches Reddit user data via PRAW
-├── persona_builder.py # Builds and formats persona using summarization + rule-based NLP
-├── utils.py # Text cleaning & trait extraction utilities
-├── output/ # Folder to store generated personas
-└── requirements.txt # Dependencies
+## 🧱 Project Structure
 
 
 ---
 
-## 📦 Libraries & Tools Used
+## 🤖 LLM Model Used
 
-| Tool / Library           | Purpose                                        |
-|-------------------------|------------------------------------------------|
-| `PRAW`                  | Python Reddit API Wrapper for scraping data   |
-| `Transformers` (HuggingFace) | Summarization using `bart-large-cnn-samsum` |
-| `nltk`                  | Text preprocessing and tokenization           |
-| `re` (regex)            | Rule-based trait extraction from raw text     |
-| `os`                    | File handling and output directory management |
+- **Model**: [`philschmid/bart-large-cnn-samsum`](https://huggingface.co/philschmid/bart-large-cnn-samsum)  
+- **Type**: Transformer-based summarizer (BART architecture)  
+- **Token Limit**: 1024  
+- **Chunking Logic**: Each text chunk is limited to **≤400 tokens** to avoid overflow
+
+This model was chosen for its strength in conversational and dialogue summarization — great for summarizing Reddit content.
 
 ---
 
-## 🧠 Approach
+## 🔧 Tools & Libraries
 
-### 1. **Data Collection**
-- Reddit username is extracted from input URL.
-- `PRAW` fetches up to **100 comments** and **50 submissions** using the Reddit API.
+| Tool / Library               | Purpose                                                  |
+|-----------------------------|----------------------------------------------------------|
+| `PRAW`                      | Access Reddit user data via API                          |
+| `transformers` (HuggingFace) | Load tokenizer & summarization model                    |
+| `nltk`                      | Sentence tokenization and text normalization             |
+| `re`                        | Regex pattern matching for trait extraction              |
+| `os`, `collections`         | File I/O and data structuring                            |
 
-### 2. **Summarization**
-- The texts are combined and tokenized using `AutoTokenizer`.
-- Text is chunked into **≤900 token blocks** to stay within model limits (max 1024).
-- Each chunk is summarized using HuggingFace’s `philschmid/bart-large-cnn-samsum` pipeline.
-- Chunk summaries are then optionally re-summarized to create a final distilled version.
+---
 
-### 3. **Trait Extraction**
-Using regex + keyword matching:
-- **Interests**: Detected via words like "music", "coding", etc.
-- **Profession**: Parsed from keywords like "developer", "teacher", etc.
-- **Location**: Regex patterns like "based in X", "from Y"
-- **Personality**: Matches adjectives like "introvert", "sarcastic", etc.
-- **Behavior**: Captures expressive language like "I feel", "I hate", etc.
+## 🎯 How It Works
 
-### 4. **Persona Formatting**
-- Final output is styled in a structured and **third-person** tone similar to marketing persona templates.
+### 1. **Input**
+Provide a Reddit profile URL (e.g., `https://www.reddit.com/user/spez/`) via command line.
+
+### 2. **Reddit Scraping**
+- Uses PRAW to extract:
+  - 100 latest comments
+  - 50 latest posts
+
+### 3. **Preprocessing & Chunking**
+- Texts are combined and chunked using tokenizer-aware splitting.
+- Each chunk contains ≤400 tokens to prevent model overflow.
+
+### 4. **Summarization**
+- Each chunk is summarized using `philschmid/bart-large-cnn-samsum`
+- Final persona summary is generated by re-summarizing all chunk summaries.
+
+### 5. **Trait Extraction**
+Using rule-based NLP and regex:
+- **Interests**: Keywords like `gaming`, `music`, `fitness`, etc.
+- **Profession**: Matches words like `student`, `developer`, `engineer`, etc.
+- **Location**: Regex like `from X`, `based in Y`
+- **Personality**: Adjectives like `introvert`, `funny`, etc.
+- **Behavior**: Matches emotional or expressive language
 
 
 
@@ -74,4 +87,5 @@ git clone https://github.com/yourusername/reddit-user-persona
 cd reddit-user-persona
 pip install -r requirements.txt
 python main.py
+
 
