@@ -23,9 +23,9 @@ Ideal for:
 ---
 
 ## 🧱 Project Structure
-## 📁 Project Structure
 
 ```
+## 📁 Project Structure
 reddit_user_persona/
 ├── main.py               # Main CLI script (entry point)
 ├── reddit_scraper.py     # Uses PRAW to fetch user comments/posts
@@ -33,10 +33,8 @@ reddit_user_persona/
 ├── utils.py              # Text cleaning and trait extraction
 ├── output/               # Stores persona output .txt files
 └── requirements.txt      # All dependencies
-
-
+```
 ---
-
 ## 🤖 LLM Model Used
 
 - **Model**: [`philschmid/bart-large-cnn-samsum`](https://huggingface.co/philschmid/bart-large-cnn-samsum)  
